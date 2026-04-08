@@ -14,10 +14,10 @@
   "rtl": false,
   "aliases": {
     "components": "@/components",
-    "utils": "@/shared/lib/utils",
-    "ui": "@/shared/shadcn",
-    "lib": "@/shared/lib",
-    "hooks": "@/shared/hooks"
+    "utils": "@/common/lib/utils",
+    "ui": "@/common/shadcn",
+    "lib": "@/common/lib",
+    "hooks": "@/common/hooks"
   },
   "registries": {}
 }
