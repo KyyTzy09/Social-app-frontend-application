@@ -1,16 +1,18 @@
 import { Button } from '@/common/shadcn/button';
 import { Input } from '@/common/shadcn/input';
-import { ArrowRight, Eye, EyeOff, Lock, Mail, User, Calendar, CircleUserRound, ChevronDown } from 'lucide-react';
+import { ArrowRight, Eye, EyeOff, Lock, Mail, User, Calendar, CircleUserRound, ChevronDown, Loader, Loader2 } from 'lucide-react';
 import React, { useState } from 'react';
 import { useForm } from '@tanstack/react-form-start';
 import { registerSchema } from '@/common/validations/AuthValidation';
 import FieldInfo from '@/common/components/FieldInfo';
+import { useRegister } from '@/data/hooks/AuthHook';
 
 interface Props {
     setTab: (tab: 'login' | 'register') => void;
 }
 
 export default function RegisterFormSection({ setTab }: Props) {
+    const { mutate: registerMutate, isPending } = useRegister()
     const [showPassword, setShowPassword] = useState(false);
 
     const form = useForm({
@@ -24,8 +26,15 @@ export default function RegisterFormSection({ setTab }: Props) {
         validators: {
             onSubmit: registerSchema
         },
-        onSubmit: () => {
-            alert("Registration successful! (This is a placeholder action)")
+        onSubmit: ({ value }) => {
+            registerMutate(value, {
+                onSuccess: () => {
+                    alert("Registrasi berhasil!");
+                },
+                onError: (error) => {
+                    alert("Registrasi gagal: " + (error instanceof Error ? error.message : "Unknown error"));
+                }
+            })
         }
     });
 
@@ -174,9 +183,16 @@ export default function RegisterFormSection({ setTab }: Props) {
                                         <Input
                                             id={field.name}
                                             name={field.name}
-                                            value={field.state.value}
+                                            value={field.state.value ? new Date(field.state.value).toISOString().split('T')[0] : ''}
                                             onBlur={field.handleBlur}
-                                            onChange={(e) => field.handleChange(e.target.value)}
+                                            onChange={(e) => {
+                                                const val = e.target.value;
+                                                if (val) {
+                                                    field.handleChange(new Date(val).toISOString());
+                                                } else {
+                                                    field.handleChange("");
+                                                }
+                                            }}
                                             type="date"
                                             className="block w-full h-10 pl-11 pr-4 bg-surface-container-high/50 border border-outline-variant/10 focus:border-primary/50 focus:ring-4 focus:ring-primary/10 rounded-xl text-on-surface placeholder:text-outline/40 font-body text-sm transition-all outline-none [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer"
                                         />
@@ -221,10 +237,10 @@ export default function RegisterFormSection({ setTab }: Props) {
                     {/* Submit Button */}
                     <Button type='submit' className="w-full h-12 relative overflow-hidden group rounded-xl bg-primary text-on-primary font-headline font-bold tracking-tight transition-transform active:scale-[0.98]">
                         <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary-container to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                        <span className="relative flex items-center justify-center gap-2">
+                        {isPending ? <Loader2 className='animate-spin' /> : <span className="relative flex items-center justify-center gap-2">
                             Buat Akun Baru
                             <ArrowRight />
-                        </span>
+                        </span>}
                     </Button>
                 </form>
 

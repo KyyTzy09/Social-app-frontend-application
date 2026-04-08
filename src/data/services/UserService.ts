@@ -3,6 +3,8 @@ import type { UserModel } from "../models/AuthModel";
 
 export class UserService {
     async getSessionUser() {
-        return await apiClient<{ data: UserModel }>({ url: "/users/session", method: "GET" });
+        return await apiClient<{ data: UserModel }>({ url: "/user/session", method: "GET" });
     }
 }
+
+export const userService = new UserService();

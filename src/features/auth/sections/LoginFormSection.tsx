@@ -1,16 +1,20 @@
 import { Button } from '@/common/shadcn/button'
 import { Input } from '@/common/shadcn/input'
-import { ArrowRight, Eye, EyeOff, Lock, Mail } from 'lucide-react'
+import { ArrowRight, Eye, EyeOff, Loader2, Lock, Mail } from 'lucide-react'
 import { useState } from 'react';
 import { useForm } from '@tanstack/react-form-start';
 import { loginSchema } from '@/common/validations/AuthValidation';
 import FieldInfo from '@/common/components/FieldInfo';
+import { useLogin } from '@/data/hooks/AuthHook';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface Props {
     setTab: (tab: 'login' | 'register') => void;
 }
 
 export default function LoginFormSection({ setTab }: Props) {
+    const queryClient = useQueryClient();
+    const { mutate: loginMutate, isPending } = useLogin()
     const [showPassword, setShowPassword] = useState(false);
 
     const form = useForm({
@@ -21,8 +25,16 @@ export default function LoginFormSection({ setTab }: Props) {
         validators: {
             onSubmit: loginSchema
         },
-        onSubmit: () => {
-            alert("Login successful! (This is a placeholder action)")
+        onSubmit: ({ value }) => {
+            loginMutate(value, {
+                onSuccess: () => {
+                    alert("Login berhasil!");
+                    queryClient.invalidateQueries({ queryKey: ['session-user'] });
+                },
+                onError: (error) => {
+                    alert("Login gagal: " + (error instanceof Error ? error.message : "Unknown error"));
+                }
+            })
         }
     })
 
@@ -139,10 +151,10 @@ export default function LoginFormSection({ setTab }: Props) {
                     {/* Submit Button */}
                     <Button type='submit' className="w-full h-12 relative overflow-hidden group rounded-xl bg-primary text-on-primary font-headline font-bold tracking-tight transition-transform active:scale-[0.98]">
                         <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary-container to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                        <span className="relative flex items-center justify-center gap-2">
+                        {isPending ? <Loader2 className='animate-spin' /> : <span className="relative flex items-center justify-center gap-2">
                             Masuk
                             <ArrowRight />
-                        </span>
+                        </span>}
                     </Button>
                 </form>
 

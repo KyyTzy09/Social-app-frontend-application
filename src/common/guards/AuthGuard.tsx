@@ -1,20 +1,12 @@
-import { useQuery } from "@tanstack/react-query";
-import { UserService } from "@/data/services/UserService";
 import { AuthModal } from "@/features/auth/AuthModal";
+import { useSession } from "@/data/hooks/UserHook";
 
 interface AuthGuardProps {
     children: React.ReactNode;
 }
 
-const userService = new UserService();
-
 export function AuthGuard({ children }: AuthGuardProps) {
-    const { data: session, isLoading, isError } = useQuery({
-        queryKey: ['session-user'],
-        queryFn: () => userService.getSessionUser(),
-        retry: false,
-        refetchOnWindowFocus: false,
-    });
+    const { data: session, isLoading, isError } = useSession()
 
     if (isLoading) {
         return (
@@ -27,7 +19,7 @@ export function AuthGuard({ children }: AuthGuardProps) {
     // Jika sudah login, lanjut render komponen aplikasi
     return (
         <>
-            {isError && !session && <AuthModal isOpen={true} onClose={() => { }} />}
+            {isError && !session && <AuthModal isOpen={!session} onClose={() => { }} />}
             {children}
         </>
     )
