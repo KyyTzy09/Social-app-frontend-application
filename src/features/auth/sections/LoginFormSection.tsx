@@ -7,6 +7,7 @@ import { loginSchema } from '@/common/validations/AuthValidation';
 import FieldInfo from '@/common/components/FieldInfo';
 import { useLogin } from '@/data/hooks/AuthHook';
 import { useQueryClient } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
 
 interface Props {
     setTab: (tab: 'login' | 'register') => void;
@@ -28,11 +29,11 @@ export default function LoginFormSection({ setTab }: Props) {
         onSubmit: ({ value }) => {
             loginMutate(value, {
                 onSuccess: () => {
-                    alert("Login berhasil!");
+                    toast.success("Login berhasil!");
                     queryClient.invalidateQueries({ queryKey: ['session-user'] });
                 },
                 onError: (error) => {
-                    alert("Login gagal: " + (error instanceof Error ? error.message : "Unknown error"));
+                    toast.error("Login gagal: " + (error instanceof Error ? error.message : "Unknown error"));
                 }
             })
         }

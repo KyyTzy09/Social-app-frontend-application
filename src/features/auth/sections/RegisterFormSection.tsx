@@ -1,11 +1,12 @@
 import { Button } from '@/common/shadcn/button';
 import { Input } from '@/common/shadcn/input';
-import { ArrowRight, Eye, EyeOff, Lock, Mail, User, Calendar, CircleUserRound, ChevronDown, Loader, Loader2 } from 'lucide-react';
-import React, { useState } from 'react';
+import { ArrowRight, Eye, EyeOff, Lock, Mail, User, Calendar, CircleUserRound, ChevronDown, Loader2 } from 'lucide-react';
+import { useState } from 'react';
 import { useForm } from '@tanstack/react-form-start';
 import { registerSchema } from '@/common/validations/AuthValidation';
 import FieldInfo from '@/common/components/FieldInfo';
 import { useRegister } from '@/data/hooks/AuthHook';
+import { toast } from 'react-toastify';
 
 interface Props {
     setTab: (tab: 'login' | 'register') => void;
@@ -29,10 +30,11 @@ export default function RegisterFormSection({ setTab }: Props) {
         onSubmit: ({ value }) => {
             registerMutate(value, {
                 onSuccess: () => {
-                    alert("Registrasi berhasil!");
+                    toast.success("Registrasi berhasil! Silakan masuk dengan akun Anda.");
+                    setTab("login");
                 },
                 onError: (error) => {
-                    alert("Registrasi gagal: " + (error instanceof Error ? error.message : "Unknown error"));
+                    toast.error("Registrasi gagal: " + (error instanceof Error ? error.message : "Unknown error"));
                 }
             })
         }

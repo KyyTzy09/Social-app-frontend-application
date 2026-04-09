@@ -10,6 +10,8 @@ import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
 import appCss from '../styles.css?url'
 import type { QueryClient } from '@tanstack/react-query'
 import { AuthGuard } from '@/common/guards/AuthGuard'
+import { ToastContainer } from "react-toastify"
+
 interface MyRouterContext {
   queryClient: QueryClient
 }
@@ -49,6 +51,18 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           <AuthGuard>
             {children}
           </AuthGuard>
+          <ToastContainer
+            position="top-right"
+            theme='colored'
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+          />
           <TanStackDevtools
             config={{
               position: 'bottom-right',
