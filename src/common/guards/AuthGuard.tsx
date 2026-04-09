@@ -6,11 +6,16 @@ interface AuthGuardProps {
 }
 
 export function AuthGuard({ children }: AuthGuardProps) {
-    const { data: session, isError } = useSession()
+    const { data: session, isLoading } = useSession()
+    const showModal = !isLoading && !session?.data
+    if (showModal) {
+        return <AuthModal />
+    }
+
+    console.log(session?.data)
     // Jika sudah login, lanjut render komponen aplikasi
     return (
         <>
-            {isError && !session && <AuthModal />}
             {children}
         </>
     )

@@ -11,7 +11,6 @@ export const Route = createFileRoute('/')({
 function Index() {
   return (
     <AppLayout>
-      <AuthModal isOpen={true} onClose={() => { }} />
       {/* Main Content */}
       <PageContent />
       {/* Right Sidebar */}

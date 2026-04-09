@@ -6,7 +6,7 @@ export const axiosInstance = axios.create({
     withCredentials: true,
 });
 
-export const apiClient = async <T>(config: AxiosRequestConfig): Promise<T | null> => {
+export const apiClient = async <T>(config: AxiosRequestConfig) => {
     try {
         const response = await axiosInstance.request<T>(config);
         return response.data;
@@ -23,7 +23,5 @@ export const apiClient = async <T>(config: AxiosRequestConfig): Promise<T | null
         } else {
             throw error
         }
-
-        return null;
     }
 };
