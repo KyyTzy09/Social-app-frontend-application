@@ -1,22 +1,45 @@
-import type { Post, PostResponse } from '@/data/models/PostModel'
+import VideoPlayer from '@/common/components/Player'
+import type { PostResponse } from '@/data/models/PostModel'
 import { Bookmark, Bubbles, Heart, Plane, type LucideIcon } from 'lucide-react'
-import React from 'react'
+import PostProgress from './PostProgress'
+import { useEffect, useRef, useState } from 'react'
 interface Props {
     post: PostResponse
 }
 
 export default function PostSection({ post }: Props) {
+    const videoRef = useRef<HTMLVideoElement>(null)
+    const [progress, setProgress] = useState(0);
+    const [isIntersecting, setIsIntersecting] = useState(false)
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                // threshold 0.6 artinya video harus nongol 60% baru diputar
+                setIsIntersecting(entry.isIntersecting)
+            },
+            { threshold: 0.6 }
+        )
+
+        if (videoRef.current) {
+            observer.observe(videoRef.current)
+        }
+
+        return () => observer.disconnect()
+    }, [])
+
     return (
         <section className="pl-20 w-full h-screen flex items-center justify-center snap-start p-5 relative max-h-screen">
             <div className="relative flex items-center justify-center h-full rounded-xl overflow-hidden shadow-2xl group max-w-screen gap-4">
                 <div className='relative flex w-full h-full items-center justify-center rounded-t-md overflow-hidden'>
-                    <video
-                        controls
-                        autoPlay
-                        loop
-                        className=" w-full h-full min-h-screen object-contain rounded-md"
-                        src={post.contentUrl}
-                    />
+                    <div className='flex w-full h-full min-h-screen'>
+                        <VideoPlayer
+                            ref={videoRef}
+                            url={post.contentUrl || ""}
+                            setProgress={setProgress}
+                            isIntersecting={isIntersecting}
+                        />
+                    </div>
                     {/* Profile Creator */}
                     <div className="absolute flex flex-col bottom-0 left-0 w-full p-8 bg-linear-to-t from-[#09090b]/90 to-transparent z-10">
                         <div className="flex items-center gap-3 mb-4">
@@ -35,10 +58,10 @@ export default function PostSection({ post }: Props) {
                             </div>
                         </div>
                         <p className="text-sm text-[#dae2fd] leading-relaxed mb-4 max-w-[80%]">
-                            <strong className="block mb-1">{post.title}</strong>
+                            <strong className="block font-bold text-lg">{post.title}</strong>
                             {post.description}
                         </p>
-                        <div className="flex items-center gap-2 text-[#bacac6] text-xs bg-white/5 backdrop-blur-sm w-fit px-3 py-1 rounded-full">
+                        <div className="flex items-center gap-2 text-gray-400 text-xs bg-white/5 backdrop-blur-sm w-fit px-3 py-1 rounded-full">
                             <span className="material-symbols-outlined text-sm">
                                 music_note
                             </span>
@@ -55,8 +78,12 @@ export default function PostSection({ post }: Props) {
                 </div>
 
                 {/* Progress Bar */}
-                <div className="absolute bottom-0 left-0 w-full h-1 bg-white/10">
-                    <div className="h-full bg-[#46eedd] w-1/3"></div>
+                <div className="absolute bottom-0 left-0 w-full h-1 bg-white/20 z-20">
+                    <PostProgress
+                        videoRef={videoRef}
+                        progress={progress}
+                        isIntersecting={isIntersecting}
+                    />
                 </div>
             </div>
         </section>
