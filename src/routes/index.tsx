@@ -1,7 +1,5 @@
 import AppLayout from '@/common/components/AppLayout'
-import { AuthModal } from '@/features/auth/AuthModal'
 import PageContent from '@/features/index/PageContent'
-import PageRightSidebar from '@/features/index/PageRightSidebar'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/')({
@@ -13,8 +11,6 @@ function Index() {
     <AppLayout>
       {/* Main Content */}
       <PageContent />
-      {/* Right Sidebar */}
-      <PageRightSidebar />
     </AppLayout>
   )
 }

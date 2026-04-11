@@ -2,8 +2,8 @@
 import { useGetAllPost } from '@/data/hooks/PostHook'
 import React, { useEffect, useRef } from 'react'
 import type { Post } from '@/data/models/PostModel'
-import { Bookmark, Bubbles, Heart, Plane, type IconNode, type LucideIcon } from 'lucide-react'
-import PostSection from './PostSection'
+import PostSection from '../post/PostSection'
+import { Loader2 } from 'lucide-react'
 
 export default function PageContent() {
     const { data, isLoading, isError, fetchNextPage, hasNextPage } = useGetAllPost(10)
@@ -29,8 +29,8 @@ export default function PageContent() {
     }, [hasNextPage, fetchNextPage])
 
     return (
-        <main className="ml-64 flex-1 h-full overflow-y-scroll snap-y snap-mandatory scrollbar-hide">
-            {isLoading && <div className="text-white text-center py-8">Loading...</div>}
+        <main className="w-full flex flex-col h-full overflow-y-scroll snap-y snap-mandatory scrollbar-hide gap-2">
+            {isLoading && <div className="text-white text-center py-8"> <Loader2 className="animate-spin" /> </div>}
             {isError && <div className="text-red-500 text-center py-8">Error loading posts</div>}
 
             {data?.pages.map((page, i) => (
@@ -40,7 +40,6 @@ export default function PageContent() {
                     ))}
                 </React.Fragment>
             ))}
-
             <div ref={observerTarget} className="h-10 w-full snap-start" />
         </main>
     )
