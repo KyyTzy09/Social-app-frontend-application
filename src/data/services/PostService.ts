@@ -1,9 +1,9 @@
 import { apiClient } from "@/common/lib/api-client"
-import type { Post } from "../models/PostModel"
+import type { PostResponse } from "../models/PostModel"
 
 class PostService {
     async getAllPost(page: number, limit: number) {
-        return await apiClient<{ data: Post[] }>({ url: `/post?page=${page}&limit=${limit}`, method: "GET" })
+        return await apiClient<{ data: PostResponse[] }>({ url: `/post?page=${page}&limit=${limit}`, method: "GET" })
     }
 }
 

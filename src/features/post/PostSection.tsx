@@ -1,9 +1,8 @@
-import type { Post } from '@/data/models/PostModel'
+import type { Post, PostResponse } from '@/data/models/PostModel'
 import { Bookmark, Bubbles, Heart, Plane, type LucideIcon } from 'lucide-react'
 import React from 'react'
-
 interface Props {
-    post: Post
+    post: PostResponse
 }
 
 export default function PostSection({ post }: Props) {
@@ -19,18 +18,18 @@ export default function PostSection({ post }: Props) {
                         src={post.contentUrl}
                     />
                     {/* Profile Creator */}
-                    <div className="absolute bottom-0 left-0 w-full p-8 bg-linear-to-t from-[#09090b]/90 to-transparent z-10">
+                    <div className="absolute flex flex-col bottom-0 left-0 w-full p-8 bg-linear-to-t from-[#09090b]/90 to-transparent z-10">
                         <div className="flex items-center gap-3 mb-4">
                             <div className="h-12 w-12 rounded-full border-2 border-[#46eedd] overflow-hidden bg-gray-500">
                                 <img
                                     alt="Creator"
                                     className="h-full w-full object-cover"
-                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAP5Ejq92-IIwY4357914K5PBMpFCVBB3RMDsA1gOReSbG96_ZPguIzc67CuelhL-ajMF3TQ1sZnV9tFNDHCeMu0M-EJ_ybOYf5Qs6pVBvR9Qp9vi8MO3Cbrb1k9tcJLl37sclogFowkhkL82nFWGOI7_N_si-CQ7gVMUmJv_pg4Dt_nh0TeVviGA3tG5uLyxt6yMjQ9B7_RwftmObqPCnR2vVH4KRcl_IZApSVpQF9ZPldtXDJHSNIEQE_MBPax4dCbPc6dCZvLkI"
+                                    src={post.sender.profile.avatar}
                                 />
                             </div>
                             <div>
                                 <h3 className="font-bold text-white font-['Manrope'] tracking-tight">
-                                    User Name
+                                    {post.sender.profile.username}
                                 </h3>
                                 <p className="text-xs text-[#46eedd] font-medium">Follow</p>
                             </div>

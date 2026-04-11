@@ -1,4 +1,4 @@
-import type { PostCategory } from "./CategoryModel";
+import type { Category } from "./CategoryModel";
 
 export interface Post {
     postId: string;
@@ -8,10 +8,18 @@ export interface Post {
     senderId: string;
     postedAt: Date;
     editedAt: Date;
-    categories: PostCategory[];
 }
 
-
+export interface PostResponse extends Post {
+    sender: {
+        userId: string;
+        profile: {
+            avatar: string;
+            username: string;
+        };
+    }
+    categories: Category[]
+}
 // model Post {
 //   postId      String  @id @default(ulid())
 //   title       String
